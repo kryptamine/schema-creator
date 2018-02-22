@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"os"
 	"flag"
+	"regexp"
 )
 
 var path string
@@ -77,7 +78,10 @@ func GetCreateStatement(db *sql.DB, table string) string {
 		panic(err)
 	}
 
-	return  createStatement
+	reg := regexp.MustCompile(`AUTO_INCREMENT=\d+`)
+	res := reg.ReplaceAllString(createStatement, "")
+
+	return  res + "\n"
 }
 
 func GetTables(db *sql.DB) []string  {
